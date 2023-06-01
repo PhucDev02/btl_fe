@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import { Route, Routes } from 'react-router-dom';
+import Footer from './Component/Footer/Footer';
+import Header from './Component/Header/Header';
+import LoginPage from './Component/LoginPage/LoginPage';
+import RegisterPage from './Component/RegisterPage/RegisterPage';
+import BookTableBody from './Component/Body/BookTableBody';
+import { Book } from './Component/BookDetail/Book';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/library/login" element={<LoginPage />} />
+        <Route path="/library/register" element={<RegisterPage />} />
+        <Route path="/library" element={<MainPage />} />
+        <Route path="/library/book/:id" element={<Book />} />
+      </Routes>
+    </>
   );
-}
+};
+
+
+const MainPage = () => {
+  return (
+    <>
+      <Header />
+      <BookTableBody />
+      <Footer />
+    </>
+  );
+};
 
 export default App;
