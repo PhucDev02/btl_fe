@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Book.css";
 
 export const Book = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const id = params.id;
   const [bookItem, setBookItem] = useState({});
@@ -28,28 +29,66 @@ export const Book = () => {
   };
 
   const handleImageChange = (e) => {
+    setBookItem({ ...bookItem, cover: e.target.value });
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUploadedImage(reader.result);
-    };
+
     if (file) {
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file);
+      setBookItem({ ...bookItem, cover: imageUrl });
     }
   };
 
   const handleEdit = () => {
     setEditing(true);
+    setShowUploadModal(true);
   };
 
-  const handleUpdate = () => {
+  const handleSave = () => {
     setEditing(false);
     // Thực hiện gửi dữ liệu cập nhật lên server
     // ...
   };
+
   const handleAdd = () => {
-    // Thực hiện gửi dữ liệu add lên server
-    // ...
+    if (validateFields()) {
+      const confirmed = window.confirm("Xác nhận thêm sách này ?");
+      if (confirmed) {
+        console.log(bookItem);
+        fetch(`http://localhost:8080/addBook?title=${bookItem.title}&author=${bookItem.author}&idCategory=${bookItem.idCategory}&releaseDate=${bookItem.releaseDate}&pageNum=${bookItem.pageNum}&description=${bookItem.description}&cover=${bookItem.cover}`)
+          .then((response) => response.text())
+          .then((data) => {
+            if (data === "true") {
+              navigate('/library');
+            } else {
+              alert("Trùng tên tác giả hoặc tên sách !!");
+            }
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
+    }
+  };
+
+  const validateFields = () => {
+    const errors = {};
+
+    if (!bookItem.title) {
+      alert("Vui lòng nhập tiêu đề");
+      return false;
+    }
+
+    if (!bookItem.author) {
+      alert("Vui lòng nhập tác giả");
+      return false;
+    }
+
+    if (!bookItem.releaseDate) {
+      alert("Vui lòng chọn ngày phát hành");
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -94,7 +133,7 @@ export const Book = () => {
                 id="description"
                 value={bookItem.description}
                 onChange={(e) =>
-                  setBookItem({ ...bookItem, bookdescription: e.target.value })
+                  setBookItem({ ...bookItem, description: e.target.value })
                 }
                 disabled={!editing}
               ></textarea>
@@ -108,21 +147,21 @@ export const Book = () => {
                   id="releasedate"
                   value={bookItem.releaseDate}
                   onChange={(e) =>
-                    setBookItem({ ...bookItem, releasedate: e.target.value })
+                    setBookItem({ ...bookItem, releaseDate: e.target.value })
                   }
                   disabled={!editing}
                   required
                 />
               </div>
-              <div className="pagenumber">
+              <div className="pageNum">
                 <label htmlFor="text">Số trang:</label> <br />
                 <input
-                  type="text"
+                  type="number"
                   name="pageNumber"
                   id="pageNumber"
-                  value= {bookItem.pageNum}
+                  value={bookItem.pageNum}
                   onChange={(e) =>
-                    setBookItem({ ...bookItem, pageNumber: e.target.value })
+                    setBookItem({ ...bookItem, pageNum: e.target.value })
                   }
                   disabled={!editing}
                 />
@@ -135,7 +174,8 @@ export const Book = () => {
                   value={bookItem.category}
                   onChange={(e) =>
                     setBookItem({ ...bookItem, category: e.target.value })
-                  }>
+                  }
+                >
                   <option value="">Thể loại</option>
                   {category.map((category) => (
                     <option key={category.id} value={category.id}>
@@ -152,7 +192,9 @@ export const Book = () => {
                         setBookItem({ ...bookItem, category: e.target.value })
                       }
                     >
-                      <option value="" aria-required>Thể loại</option>
+                      <option value="" aria-required>
+                        Thể loại
+                      </option>
                       {category.map((category) => (
                         <option key={category.id} value={category.id}>
                           {category.name}
@@ -164,7 +206,7 @@ export const Book = () => {
                       type="text"
                       name="category"
                       id="category"
-                      value={bookItem.category}
+                      value={bookItem.categoryName}
                       onChange={(e) =>
                         setBookItem({ ...bookItem, category: e.target.value })
                       }
@@ -185,8 +227,11 @@ export const Book = () => {
                       className="img-url"
                       type="text"
                       placeholder="Nhập đường link hoặc kéo thả đường link ảnh"
-                      value={uploadedImage}
-                      onChange={(e) => setUploadedImage(e.target.value)}
+                      value={bookItem.cover}
+                      onChange={(e) => {
+                        setUploadedImage(e.target.value);
+                        setBookItem({ ...bookItem, cover: e.target.value });
+                      }}
                     />
                     <input
                       className="img-file"
@@ -194,7 +239,7 @@ export const Book = () => {
                       accept="image/*"
                       onChange={handleImageChange}
                     />
-                    <button onClick={handleUpload} >Upload</button>
+                    <button onClick={handleUpload}>Upload</button>
                   </div>
                 ) : (
                   <>
@@ -202,27 +247,45 @@ export const Book = () => {
                       Upload
                     </button>
                     {bookItem.cover && (
-                      <img className="cover" src={bookItem.cover} alt="bìa sách" />)}
+                      <img
+                        className="cover"
+                        src={bookItem.cover}
+                        alt="bìa sách"
+                      />
+                    )}
                   </>
                 )
               ) : (
                 <span>
-                  <img className="cover" src={bookItem.cover} alt="bìa sách" />
+                  <img
+                    className="cover"
+                    src={bookItem.cover}
+                    alt="bìa sách"
+                  />
                 </span>
               )}
             </div>
           </div>
         </div>
       </div>
-      <div className="footer">
+      <div
+        className="footer"
+        style={{ display: "flex", justifyContent: "flex-end" }}
+      >
         {id < 0 ? (
-          <button class="btn btn-success" onClick={handleAdd}>Add</button>
+          <button className="btn btn-success" onClick={handleAdd}>
+            Add
+          </button>
         ) : (
           <>
             {editing ? (
-              <button class="btn btn-success" onClick={handleUpdate}>Update</button>
+              <button className="btn btn-success" onClick={handleSave}>
+                Save
+              </button>
             ) : (
-              <button class="btn btn-warning" onClick={handleEdit}>Edit</button>
+              <button className="btn btn-warning" onClick={handleEdit}>
+                Edit
+              </button>
             )}
           </>
         )}
