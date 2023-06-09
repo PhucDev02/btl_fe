@@ -4,8 +4,9 @@ import Footer from './Component/Footer/Footer';
 import Header from './Component/Header/Header';
 import LoginPage from './Component/LoginPage/LoginPage';
 import RegisterPage from './Component/RegisterPage/RegisterPage';
-import BookTableBody from './Component/Body/BookTableBody';
 import { Book } from './Component/BookDetail/Book';
+import ClientHomePage, { BookClient } from './Component/Client/BookClient';
+import AdminHomePage from './Component/Body/AdminHomePage';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/library/login" element={<LoginPage />} />
         <Route path="/library/register" element={<RegisterPage />} />
+        <Route path="/library/admin" element={<MainPage />} />
         <Route path="/library" element={<MainPage />} />
         <Route path="/library/book/:id" element={<Book />} />
       </Routes>
@@ -25,7 +27,9 @@ const MainPage = () => {
   return (
     <>
       <Header />
-      <BookTableBody />
+      {
+        localStorage.getItem("token") === "admin" ?<AdminHomePage />  : <ClientHomePage />
+      }
       <Footer />
     </>
   );

@@ -3,13 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
-    const navigation=useNavigate();
+    const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token") !== null);
     const handleLogout = () => {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
-        navigation("/library/login");
-      };
+        navigate("/library/login");
+    };
+
+    const handleLogoClick = () => {
+        navigate("/library");
+    };
+
     return (
         <header className="header">
             <div className="container">
@@ -19,7 +24,8 @@ const Header = () => {
                             src="https://thumbs.dreamstime.com/b/beautiful-meticulously-designed-library-icon-perfect-use-designing-developing-websites-printed-materials-presentations-112019830.jpg"
                             alt="Logo"
                             className="logo"
-                            style={{ width: '50px', height: '50px' }}
+                            style={{ width: '50px', height: '50px', cursor: 'pointer' }}
+                            onClick={handleLogoClick}
                         />
                     </div>
                     <div className="col-6 text-center">
@@ -27,9 +33,9 @@ const Header = () => {
                     </div>
                     {
                         isLoggedIn ? (
-                            <div  className="col-3 text-right">
+                            <div className="col-3 text-right">
                                 <h4>{localStorage.getItem("token")}</h4>
-                                <button className="btn btn-danger " onClick={handleLogout}>Logout</button>
+                                <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                             </div>
                         ) : (
                             <div className="col-3 text-right">
@@ -38,8 +44,6 @@ const Header = () => {
                             </div>
                         )
                     }
-
-
                 </div>
             </div>
         </header>
