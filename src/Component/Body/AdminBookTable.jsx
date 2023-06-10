@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const BookTableBody = () => {
+const AdminBookTable = () => {
     const [book, setBook] = useState([]);
     const [remain, setRemain] = useState([]);
 
@@ -54,13 +54,13 @@ const BookTableBody = () => {
     return (
         <>
             {localStorage.getItem("token") === "admin" && (
-                <div className="d-flex justify-content-center mt-4">
+                <div className="d-flex justify-content-center mt-2">
                     <Link to={`/admin/book/-1`} className="btn btn-primary">
                         Add new
                     </Link>
                 </div>
             )}
-            <div style={{ overflow: 'auto', height: '500px' }}>
+            <div style={{ overflow: 'auto', height: '450px' }} className="mt-2">
                 <div className="container " >
                     <br></br>
                     <table className="table table-striped table-hover table-bordered">
@@ -111,4 +111,4 @@ const BookTableBody = () => {
     );
 };
 
-export default BookTableBody;
+export default AdminBookTable;

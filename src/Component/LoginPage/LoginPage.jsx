@@ -30,6 +30,7 @@ const LoginPage = () => {
         } else if (token === "client") {
           alert('Đăng nhập thành công');
           localStorage.setItem('token', token);
+          SaveIdLogin(username);
           navigate('/library')
           // Chuyển hướng đến trang chính hoặc trang khác
         } else {
@@ -73,11 +74,24 @@ const LoginPage = () => {
         </form>
         <p className="text-center mt-3">
           Don't have an account?{" "}
-          <Link to="/library/register"  className="text-underline">Register</Link>
+          <Link to="/library/register" className="text-underline">Register</Link>
         </p>
       </div>
     </div>
   );
 };
-
+const SaveIdLogin = (username) => {
+  // Gọi API để lấy thông tin id từ server
+  fetch(`http://localhost:8080/api/getUserId?username=${username}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const userId = data;
+      localStorage.setItem('userId', userId);
+      window.location.href = `/library`;
+    })
+    .catch((error) => {
+      alert('Lỗi khi lấy thông tin từ server');
+      console.error(error);
+    });
+};
 export default LoginPage;

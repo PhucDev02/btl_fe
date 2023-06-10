@@ -22,6 +22,7 @@ const RegisterPage = () => {
         if (data === "true") {
           alert("Đăng ký thành công");
           localStorage.setItem('token', "user");
+          SaveIdLogin(username);
           navigate('/library')
         } else {
           alert("Trùng Username !!!");
@@ -63,5 +64,20 @@ const RegisterPage = () => {
     </div>
   );
 };
-
+const SaveIdLogin = (username) => {
+  // Gọi API để lấy thông tin id từ server
+  fetch(`http://localhost:8080/api/getUserId?username=${username}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const userId = data;
+      console.log(data)
+      alert( data)
+      localStorage.setItem('userId', userId);
+      window.location.href = `/library`;
+    })
+    .catch((error) => {
+      alert('Lỗi khi lấy thông tin id từ server');
+      console.error(error);
+    });
+};
 export default RegisterPage;

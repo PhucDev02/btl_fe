@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
 
 const OrderList = () => {
     const [orders, setOrders] = useState([]);
@@ -42,19 +41,20 @@ const OrderList = () => {
         const confirmed = window.confirm("Are you sure you want to cancel this order?");
 
         if (confirmed) {
-            axios
-                .delete(`http://localhost:8080/orders/${orderId}`)
-                .then((response) => {
-                    if (response.status === 200) {
-                        // Nếu hủy thành công, cập nhật lại danh sách đơn hàng
-                        fetchOrders();
-                        console.log(`Order with ID ${orderId} has been canceled.`);
-                    } else {
-                        console.log(`Failed to cancel order with ID ${orderId}.`);
-                    }
+            fetch(`http://localhost:8080/orders/${orderId}`, {
+                method: 'DELETE'
+              })
+                .then(response => {
+                  if (response.ok) {
+                    console.log(`Order with ID ${orderId} has been canceled.`);
+                    // Nếu hủy thành công, cập nhật lại danh sách đơn hàng
+                    fetchOrders();
+                  } else {
+                    console.log(`Failed to cancel order with ID ${orderId}.`);
+                  }
                 })
-                .catch((error) => {
-                    console.log("Error canceling order:", error);
+                .catch(error => {
+                  console.log("Error canceling order:", error);
                 });
         }
     };
@@ -63,32 +63,32 @@ const OrderList = () => {
     return (
         <div className="container">
             <br></br>
-            <table className="table table-striped table-bordered">
+            <table className="table table-striped table-bordered table-hover">
                 <thead className="table-dark">
                     <tr>
-                        <th>Book Image</th>
-                        <th>Book Title</th>
-                        <th>Author</th>
-                        <th>Quantity</th>
-                        <th>Action</th>
+                        <th className="text-center">Book Image</th>
+                        <th className="text-center">Book Title</th>
+                        <th className="text-center"> Author</th>
+                        <th className="text-center">Quantity</th>
+                        <th className="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {orders.map((order) => (
                         <tr key={order.id}>
                             <td>
-                                <img src={bookItems[order.idBook]?.cover} alt="Book Cover" style={{ width: "100px" }} />
+                                <div className="d-flex justify-content-center align-items-center" style={{ height: "100px" }}>
+                                    <img src={bookItems[order.idBook]?.cover} alt="Book Cover" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                                </div>
                             </td>
                             <td>{bookItems[order.idBook]?.title}</td>
                             <td>{bookItems[order.idBook]?.author}</td>
-                            <td>{order.quantity}</td>
+                            <td className="text-center">{order.sum}</td>
                             <td>
-                                <div className="d-flex justify-content-center">
+                                <div className="d-flex justify-content-center align-items-center" >
                                     <Link to={`/library/book/${order.idBook}`} className="btn btn-primary">
                                         View
                                     </Link>
-                                </div>
-                                <div className="d-flex justify-content-center">
                                     <button className="btn btn-danger" onClick={() => handleCancelOrder(order.id)}>
                                         Cancel
                                     </button>

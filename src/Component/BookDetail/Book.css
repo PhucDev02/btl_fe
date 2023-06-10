@@ -1,5 +1,6 @@
 .cover{
-    height : 20rem;
+    height : 25rem;
+    object-fit: contain;
 }
 .Bookdetail{
     margin-top: 20px;

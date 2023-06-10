@@ -18,8 +18,8 @@ const ClientHomePage = () => {
 
     return (
         <>
-            <div className="container mt-4 ">
-                <div className="row">
+            <div className="container mt-4 " style={{ overflow: 'auto', height: '500px' }}>
+                <div className="row" >
                     {books.map((book) => (
                         <div className="col-lg-3 col-md-4 mb-4" key={book.id}>
                             <div className="card h-100 border border-dark">
@@ -27,13 +27,13 @@ const ClientHomePage = () => {
                                     <div className="position-relative">
                                         <img
                                             src={book.cover}
-                                            className="card-img-top border border-3 rounded"
+                                            className="card-img-top border border-3 rounded "
                                             alt="Book Cover"
                                             style={{ objectFit: "contain", height: "200px" }}
                                         />
                                         <div className="card-body d-flex flex-column justify-content-end">
-                                            <h5 class="text-dark">{book.title}</h5>
-                                            <p class="text-dark" >Author: {book.author}</p>
+                                            <h5 >{book.title}</h5>
+                                            <p  >Author: {book.author}</p>
                                         </div>
                                     </div>
                                 </Link>

@@ -10,7 +10,7 @@ const searchKeyByValue = (list, value) => {
   const foundObject = list.find((obj) => obj.name === value);
   return foundObject ? foundObject.key : undefined;
 };
-export const Book = () => {
+export const BookDetail = () => {
   const params = useParams();
   const id = params.id;
   const [isAdding, setIsAdding] = useState(id < 0 ? true : false);
@@ -62,7 +62,7 @@ export const Book = () => {
         window.location.href = `/admin/book/${data.id}`;
       })
       .catch((error) => {
-        console.error('Error:', error);
+        alert("Tên sách của tác giả này đã tồn tại ")
       });
   };
 
@@ -145,7 +145,7 @@ export const Book = () => {
       .then((data) => {
         // Xử lý dữ liệu phản hồi từ server (nếu cần)
         console.log('Data updated:', data, updatedData);
-         window.location.href = `/admin/book/${id}`;
+        window.location.href = `/admin/book/${id}`;
       })
       .catch((error) => {
        window.location.href = `/admin/book/${id}`;
