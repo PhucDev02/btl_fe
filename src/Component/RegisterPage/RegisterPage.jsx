@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -55,6 +55,10 @@ const RegisterPage = () => {
           </div>
           <button type="submit" className="register-btn" disabled={password !== confirmPassword}>Register</button>
         </form>
+        <p className="text-center mt-3">
+        Already have an account?{" "}
+          <Link to="/library/login"  className="text-underline">Login</Link>
+        </p>
       </div>
     </div>
   );

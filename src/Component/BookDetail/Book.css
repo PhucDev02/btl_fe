@@ -29,7 +29,7 @@
 .upload-modal{
     display: flex;
     flex-direction: column;
-    margin-top: 4rem;
+    margin-top: 3px;
 }
 .img-url{
     padding : 0.5rem;
